@@ -1686,15 +1686,55 @@ button {
   }
 
   .home {
-    padding: 34px 18px;
+    padding: 20px 14px;
   }
 
-  .home-analyzer {
-    padding: 12px;
+  .hero {
+    gap: 24px;
+  }
+
+  .hero-copy h1 {
+    font-size: 32px;
+    margin: 14px 0 12px;
+  }
+
+  .hero-copy p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .eyebrow {
+    font-size: 11px;
+    padding: 6px 12px;
+  }
+
+  .home-ai-console {
+    gap: 16px;
   }
 
   .home-action-row {
-    justify-content: flex-start;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 0;
+  }
+
+  .home-action-row button {
+    flex: 1;
+    min-width: calc(50% - 5px);
+    padding: 12px 16px;
+    font-size: 13px;
+    border-radius: 12px;
+  }
+
+  .home-analyzer {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .home-analyzer textarea {
+    min-height: 80px;
+    padding: 10px 6px;
   }
 
   .mobile-only {
