@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YourPath AI</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(circle at 20% 10%, rgba(124, 58, 237, 0.35), transparent 34rem),
+          radial-gradient(circle at 80% 80%, rgba(37, 99, 235, 0.28), transparent 30rem),
+          #07071a;
+        color: #f0f0ff;
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      main {
+        width: min(560px, calc(100vw - 32px));
+        padding: 32px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(36px, 7vw, 56px);
+        line-height: 1;
+      }
+
+      p {
+        margin: 0 0 24px;
+        color: rgba(240, 240, 255, 0.65);
+        line-height: 1.6;
+      }
+
+      code {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #c4b5fd;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>YourPath AI</h1>
+      <p>
+        This prototype has been converted into a real React and Express application.
+        Run the app from this folder, then open the Vite URL.
+      </p>
+      <code>npm run dev:all</code>
+    </main>
+  </body>
+</html>
