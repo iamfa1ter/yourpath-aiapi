@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent_purple">#6366f1</color>
+    <color name="bg_dark">#0f172a</color>
+    <color name="input_bg">#334155</color>
+    <color name="message_ai_bg">#1e293b</color>
+    <color name="message_user_bg">#6366f1</color>
+    <color name="surface_dark">#1e293b</color>
+    <color name="text_primary">#ffffff</color>
+    <color name="text_secondary">#94a3b8</color>
+    <string name="app_name">YourPath AI</string>
+    <string name="input_hint">Ask about admissions...</string>
+    <style name="Theme.YourPathAI" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/accent_purple</item>
+        <item name="colorPrimaryDark">@color/bg_dark</item>
+        <item name="colorAccent">@color/accent_purple</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+</resources>
