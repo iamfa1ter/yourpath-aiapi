@@ -53,10 +53,13 @@ export default async (req, context) => {
       );
     }
 
-    const openai = new OpenAI({ apiKey: openAIKey });
+    const openai = new OpenAI({
+      apiKey: openAIKey,
+      baseURL: "https://openrouter.ai/api/v1"
+    });
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "openai/gpt-4o-mini",
       messages: [
         { role: "system", content: admissionChatSystemPrompt },
         { role: "user", content: message }
