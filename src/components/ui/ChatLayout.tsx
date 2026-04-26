@@ -6,7 +6,8 @@ import { ChatInput } from "./ChatInput";
 import { ChatMessage, type ChatMessageData, type ChatSection } from "./ChatMessage";
 import { ChatSidebar } from "./ChatSidebar";
 
-const CHAT_STORAGE_KEY = "yourpath-ai-chat-sessions-v1";
+const CHAT_STORAGE_KEY = "yourpath-ai-chat-sessions-v2";
+const LEGACY_CHAT_STORAGE_KEYS = ["yourpath-ai-chat-sessions-v1"];
 
 const starterMessage: ChatMessageData = {
   id: "welcome",
@@ -40,7 +41,7 @@ function sectionsFromChatReply(reply: any): ChatSection[] {
     }));
 }
 
-function fallbackSections(prompt: string): ChatSection[] {
+function fallbackSections(): ChatSection[] {
   return [];
 }
 
@@ -66,7 +67,7 @@ export function ChatLayout() {
   const [sessions, setSessions] = useState<ChatSession[]>(loadSavedSessions);
   const [activeChatId, setActiveChatId] = useState<string | null>(() => loadSavedSessions()[0]?.id || null);
   const [loading, setLoading] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => typeof window !== "undefined" && window.innerWidth < 760);
   const [lastPrompt, setLastPrompt] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -79,11 +80,28 @@ export function ChatLayout() {
   }, [messages, loading]);
 
   useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 760) {
+        setSidebarCollapsed(true);
+      } else {
+        setSidebarCollapsed(false);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    LEGACY_CHAT_STORAGE_KEYS.forEach((key) => window.localStorage.removeItem(key));
+  }, []);
+
+  useEffect(() => {
     window.localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(sessions));
   }, [sessions]);
 
-  function updateActiveSession(updater: (session: ChatSession) => ChatSession) {
-    setSessions((current) => current.map((session) => (session.id === activeChatId ? updater(session) : session)));
+  function updateSession(sessionId: string, updater: (session: ChatSession) => ChatSession) {
+    setSessions((current) => current.map((session) => (session.id === sessionId ? updater(session) : session)));
   }
 
   async function sendMessage(prompt: string) {
@@ -93,14 +111,37 @@ export function ChatLayout() {
       content: prompt
     };
 
+    const existingSessionId = activeChatId && sessions.some((session) => session.id === activeChatId) ? activeChatId : null;
+    const targetSessionId = existingSessionId || `chat-${Date.now()}`;
+
     setLastPrompt(prompt);
-    updateActiveSession((session) => ({
-      ...session,
-      title: session.messages.length <= 1 ? createChatTitle(prompt) : session.title,
-      subtitle: "Autosaved just now",
-      messages: [...session.messages, userMessage],
-      updatedAt: Date.now()
-    }));
+    if (!existingSessionId) setActiveChatId(targetSessionId);
+    setSessions((current) => {
+      if (existingSessionId) {
+        return current.map((session) =>
+          session.id === targetSessionId
+            ? {
+                ...session,
+                title: session.messages.length <= 1 ? createChatTitle(prompt) : session.title,
+                subtitle: "Autosaved just now",
+                messages: [...session.messages, userMessage],
+                updatedAt: Date.now()
+              }
+            : session
+        );
+      }
+
+      return [
+        {
+          id: targetSessionId,
+          title: createChatTitle(prompt),
+          subtitle: "Autosaved just now",
+          messages: [starterMessage, userMessage],
+          updatedAt: Date.now()
+        },
+        ...current
+      ];
+    });
     setLoading(true);
 
     try {
@@ -112,7 +153,7 @@ export function ChatLayout() {
         content: response.reply?.content || "Got it. Tell me a bit more about your admission goal.",
         sections
       };
-      updateActiveSession((session) => ({
+      updateSession(targetSessionId, (session) => ({
         ...session,
         messages: [...session.messages, assistantMessage],
         updatedAt: Date.now()
@@ -122,9 +163,9 @@ export function ChatLayout() {
         id: `assistant-fallback-${Date.now()}`,
         role: "assistant",
         content: "The live advisor could not complete the request, so here is a structured planning draft you can use now.",
-        sections: fallbackSections(prompt)
+        sections: fallbackSections()
       };
-      updateActiveSession((session) => ({
+      updateSession(targetSessionId, (session) => ({
         ...session,
         messages: [...session.messages, assistantMessage],
         updatedAt: Date.now()
@@ -158,15 +199,8 @@ export function ChatLayout() {
     setSessions((current) => {
       const remaining = current.filter((session) => session.id !== id);
       if (remaining.length === 0) {
-        const fresh = {
-          id: `chat-${Date.now()}`,
-          title: "New admission plan",
-          subtitle: "Autosaved",
-          messages: [starterMessage],
-          updatedAt: Date.now()
-        };
-        setActiveChatId(fresh.id);
-        return [fresh];
+        setActiveChatId(null);
+        return [];
       }
       if (id === activeChatId) setActiveChatId(remaining[0].id);
       return remaining;
