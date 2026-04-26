@@ -94,7 +94,7 @@ export default async (req, context) => {
       };
     }
 
-    return new Response(JSON.stringify(result), {
+    return new Response(JSON.stringify({ analysis: result }), {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });
