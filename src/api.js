@@ -1,7 +1,8 @@
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "/.netlify/functions";
 
 async function postJSON(path, payload) {
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const endpoint = path.startsWith("/api/") ? path.replace("/api/", "/") : path;
+  const response = await fetch(`${apiBaseUrl}${endpoint}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
