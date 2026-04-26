@@ -1612,6 +1612,30 @@ button {
 }
 
 @media (max-width: 760px) {
+  .nav {
+    grid-template-columns: auto 1fr auto;
+    padding: 16px 16px;
+    gap: 12px;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .brand-name {
+    font-size: 13px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-status {
+    display: none;
+  }
+
   .form-grid,
   .field-grid,
   .section-grid,
@@ -1728,5 +1752,46 @@ button {
 
   .tab-button {
     white-space: nowrap;
+  }
+
+  .input,
+  .textarea,
+  .select {
+    min-height: 48px;
+    padding: 14px 13px;
+    font-size: 16px;
+  }
+
+  .textarea {
+    min-height: 120px;
+  }
+
+  .field {
+    gap: 10px;
+  }
+
+  button {
+    min-height: 48px;
+    font-size: 15px;
+  }
+
+  .flow-footer {
+    gap: 12px;
+  }
+
+  .flow-footer button {
+    flex: 1;
+  }
+
+  .hero-copy {
+    padding: 24px 0;
+  }
+
+  .hero-copy h1 {
+    font-size: 36px;
+  }
+
+  .hero-copy p {
+    font-size: 15px;
   }
 }
